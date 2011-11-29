@@ -8,8 +8,9 @@ class Player():
     HP = None
     MP = None
     level = 1
-    currentLoc = (0,0)
-    def __init__(self,loc,sprite="player1.png"):
+    currentLoc = (1,1)
+    def __init__(self,loc,sprite,gridx):
+        self.grid = gridx
         self.HP = playerStats[self.level]["HP"]
         self.MP = playerStats[self.level]["MP"]
         self.loadSprites(sprite)
@@ -37,8 +38,12 @@ class Player():
 
     def move(self,direction):
         if direction == "n":
-            # Put animation function here
-            self.currentLoc = (self.currentLoc[0],self.currentLoc[1]+1)
+            if self.currentLoc[1] > 1: self.currentLoc = (self.currentLoc[0],self.currentLoc[1]-1)
+        elif direction == "s":
+            if (self.currentLoc[1] <= self.grid.ySize): self.currentLoc = (self.currentLoc[0],self.currentLoc[1]+1)
+
+    def getLoc(self):
+        return self.currentLoc
 
 class Animator():
     def __init__(self):

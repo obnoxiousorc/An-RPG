@@ -21,8 +21,8 @@ class TileGrid(MapData):
     def __init__(self, scr, sX=8, sY=8):
         global grid,xSize,ySize,screen,nullTile
         nullTile = self.loadImage("null.png")
-        ySize = sY
-        xSize = sX
+        self.ySize = sY
+        self.xSize = sX
         screen = scr
         x = 1
         y = 1
