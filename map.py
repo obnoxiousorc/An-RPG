@@ -19,11 +19,11 @@ class MapData():
 
 class TileGrid(MapData):
     def __init__(self, scr, sX=8, sY=8):
-        global grid,xSize,ySize,screen,nullTile
+        global grid,xSize,ySize,nullTile
         nullTile = self.loadImage("null.png")
         self.ySize = sY
         self.xSize = sX
-        screen = scr
+        self.screen = scr
         x = 1
         y = 1
         for i in range(sX):
@@ -77,7 +77,7 @@ class TileGrid(MapData):
         return grid[tile]["walkable"]
 
     def loadMapData(self,mapname):
-        global grid, screen
+        global grid
         if not os.path.exists(dirs["maps"] + mapname + ".py"):
             print "No such map."
             return
@@ -96,7 +96,6 @@ class TileGrid(MapData):
             
 
     def setTile(self,image,layer=2,firstLoc=(1,1),*args):
-        global screen,grid
         grid[firstLoc][layer] = image
         if len(args) > 0:
             for loc in args:
@@ -113,17 +112,15 @@ class TileGrid(MapData):
         else: print "ERROR"
 
     def fill(self,image,layer):
-        global screen
         for tile in grid:
             grid[tile][layer] = image
         self.update()
 
     def update(self):
-        global screen
-        screen.fill((0,0,0))
+        self.screen.fill((0,0,0))
         for tile in grid:
             loc = self.getCoords(tile)
-            screen.blit(grid[tile][1],loc)
-            screen.blit(grid[tile][2],loc)
-            screen.blit(grid[tile][3],loc)
+            self.screen.blit(grid[tile][1],loc)
+            self.screen.blit(grid[tile][2],loc)
+            self.screen.blit(grid[tile][3],loc)
         pygame.display.update()

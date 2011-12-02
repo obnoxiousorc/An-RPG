@@ -14,7 +14,7 @@ class Player():
         self.HP = playerStats[self.level]["HP"]
         self.MP = playerStats[self.level]["MP"]
         self.loadSprites(sprite)
-        currentLoc = loc
+        self.currentLoc = loc
 
     def loadSprites(self,filenameT):
         global sprite
@@ -44,6 +44,11 @@ class Player():
 
     def getLoc(self):
         return self.currentLoc
+
+    def draw(self):
+        coords = self.grid.getCoords(self.currentLoc)
+        self.grid.screen.blit(self.sprite,coords)
+        pygame.display.update()
 
 class Animator():
     def __init__(self):
