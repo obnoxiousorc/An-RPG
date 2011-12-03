@@ -8,7 +8,6 @@ class Player():
     HP = None
     MP = None
     level = 1
-    currentLoc = (1,1)
     def __init__(self,loc,sprite,gridx):
         self.grid = gridx
         self.HP = playerStats[self.level]["HP"]
@@ -38,13 +37,21 @@ class Player():
 
     def move(self,direction):
         if direction == "n":
-            if self.currentLoc[1] > 1: self.currentLoc = (self.currentLoc[0],self.currentLoc[1]-1)
+            newLoc = (self.currentLoc[0],self.currentLoc[1]-1)
+            if self.currentLoc[1] > 1: 
+                if self.grid.isWalkable(newLoc): self.currentLoc = newLoc
         elif direction == "s":
-            if self.currentLoc[1] <= self.grid.ySize: self.currentLoc = (self.currentLoc[0],self.currentLoc[1]+1)
+            newLoc = (self.currentLoc[0],self.currentLoc[1]+1)
+            if self.currentLoc[1] < self.grid.ySize: 
+                if self.grid.isWalkable(newLoc): self.currentLoc = newLoc
         elif direction == "w":
-            if self.currentLoc[0] > 1: self.currentLoc = (self.currentLoc[0]-1,self.currentLoc[1])
+            newLoc = (self.currentLoc[0]-1,self.currentLoc[1])
+            if self.currentLoc[0] > 1: 
+                if self.grid.isWalkable(newLoc): self.currentLoc = newLoc
         elif direction == "e":
-            if (self.currentLoc[0] <= self.grid.xSize): self.currentLoc = (self.currentLoc[0]+1,self.currentLoc[1])
+            newLoc = (self.currentLoc[0]+1,self.currentLoc[1])
+            if (self.currentLoc[0] < self.grid.xSize): 
+                if self.grid.isWalkable(newLoc): self.currentLoc = newLoc
 
     def getLoc(self):
         return self.currentLoc

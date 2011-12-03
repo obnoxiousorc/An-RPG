@@ -9,7 +9,6 @@
 import pygame,os,sys
 from prefs import *
 tileSize = 25
-grid = {}
 nullTile = None
 screen = None
 
@@ -19,8 +18,9 @@ class MapData():
 
 class TileGrid(MapData):
     def __init__(self, scr, sX=8, sY=8):
-        global grid,xSize,ySize,nullTile
+        global xSize,ySize,nullTile
         nullTile = self.loadImage("null.png")
+        self.grid = dict()
         self.ySize = sY
         self.xSize = sX
         self.screen = scr
@@ -28,18 +28,27 @@ class TileGrid(MapData):
         y = 1
         for i in range(sX):
             for i in range(sY):
-                grid[(x,y)] = dict()
-                grid[(x,y)][1] = nullTile
-                grid[(x,y)][2] = nullTile
-                grid[(x,y)][3] = nullTile
-                grid[(x,y)]["walkable"] = True
-                grid[(x,y)]["coords"] = ((x*tileSize)-25,(y*tileSize)-25)
+                self.grid[(x,y)] = dict()
+                self.grid[(x,y)][1] = nullTile
+                self.grid[(x,y)][2] = nullTile
+                self.grid[(x,y)][3] = nullTile
+                self.setWalkable(True,(x,y))
+                self.grid[(x,y)]["coords"] = ((x*tileSize)-25,(y*tileSize)-25)
                 y += 1
             y = 1
             x += 1
 
     def getCoords(self,loc):
-        return grid[loc]["coords"]
+        return self.grid[loc]["coords"]
+
+    def setWalkable(self,value,loc,*args):
+        self.grid[loc]["walkable"] = value
+        if len(args) > 0:
+            for loc1 in args:
+                self.grid[loc1]["walkable"] = value
+
+    def isWalkable(self,loc):
+        return self.grid[loc]["walkable"]
 
     def loadImage(self,imagename):
         if not os.path.exists(dirs["tiles"] + imagename):
@@ -61,23 +70,19 @@ class TileGrid(MapData):
                 print "Map not saved."
                 return
         savedGrid = {}
-        for tile in grid:
-            imagename = globals()[id(grid[tile][1])]
-            savedGrid[tile] = grid[tile]
-            savedGrid[tile][1] = globals()[id(grid[tile][1])]
-            savedGrid[tile][2] = globals()[id(grid[tile][2])]
-            savedGrid[tile][3] = globals()[id(grid[tile][3])]
+        for tile in self.grid:
+            imagename = globals()[id(self.grid[tile][1])]
+            savedGrid[tile] = self.grid[tile]
+            savedGrid[tile][1] = globals()[id(self.grid[tile][1])]
+            savedGrid[tile][2] = globals()[id(self.grid[tile][2])]
+            savedGrid[tile][3] = globals()[id(self.grid[tile][3])]
         mapFile = open(dirs["maps"] + mapname + ".py", 'w')
         mapFile.write('grid = ' + repr(savedGrid) + '\n')
-        mapFile.write('size = ' + str((xSize,ySize)) + '\n')
+        mapFile.write('size = ' + str((self.xSize,self.ySize)) + '\n')
         mapFile.close()
         print "Map saved."
 
-    def getWalkable(self,tile):
-        return grid[tile]["walkable"]
-
     def loadMapData(self,mapname):
-        global grid
         if not os.path.exists(dirs["maps"] + mapname + ".py"):
             print "No such map."
             return
@@ -87,19 +92,19 @@ class TileGrid(MapData):
         except:
             print "ERROR; import of " + mapname + " failed."
             return
-        grid = mapImport.grid
-        for tile in grid:
-            grid[tile][1] = self.loadImage(grid[tile][1])
-            grid[tile][2] = self.loadImage(grid[tile][2])
-            grid[tile][3] = self.loadImage(grid[tile][3])
+        self.grid = mapImport.grid
+        for tile in self.grid:
+            self.grid[tile][1] = self.loadImage(self.grid[tile][1])
+            self.grid[tile][2] = self.loadImage(self.grid[tile][2])
+            self.grid[tile][3] = self.loadImage(self.grid[tile][3])
         self.update()
             
 
     def setTile(self,image,layer=2,firstLoc=(1,1),*args):
-        grid[firstLoc][layer] = image
+        self.grid[firstLoc][layer] = image
         if len(args) > 0:
             for loc in args:
-                grid[loc][layer] = image
+                self.grid[loc][layer] = image
         self.update()
 
     def drawLine(self,image,axis,value):
@@ -113,12 +118,12 @@ class TileGrid(MapData):
 
     def fill(self,image,layer):
         for tile in grid:
-            grid[tile][layer] = image
+            self.grid[tile][layer] = image
         self.update()
 
     def update(self):
-        for tile in grid:
+        for tile in self.grid:
             loc = self.getCoords(tile)
-            self.screen.blit(grid[tile][1],loc)
-            self.screen.blit(grid[tile][2],loc)
-            self.screen.blit(grid[tile][3],loc)
+            self.screen.blit(self.grid[tile][1],loc)
+            self.screen.blit(self.grid[tile][2],loc)
+            self.screen.blit(self.grid[tile][3],loc)
