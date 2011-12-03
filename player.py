@@ -40,7 +40,11 @@ class Player():
         if direction == "n":
             if self.currentLoc[1] > 1: self.currentLoc = (self.currentLoc[0],self.currentLoc[1]-1)
         elif direction == "s":
-            if (self.currentLoc[1] <= self.grid.ySize): self.currentLoc = (self.currentLoc[0],self.currentLoc[1]+1)
+            if self.currentLoc[1] <= self.grid.ySize: self.currentLoc = (self.currentLoc[0],self.currentLoc[1]+1)
+        elif direction == "w":
+            if self.currentLoc[0] > 1: self.currentLoc = (self.currentLoc[0]-1,self.currentLoc[1])
+        elif direction == "e":
+            if (self.currentLoc[0] <= self.grid.xSize): self.currentLoc = (self.currentLoc[0]+1,self.currentLoc[1])
 
     def getLoc(self):
         return self.currentLoc

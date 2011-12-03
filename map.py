@@ -117,10 +117,8 @@ class TileGrid(MapData):
         self.update()
 
     def update(self):
-        self.screen.fill((0,0,0))
         for tile in grid:
             loc = self.getCoords(tile)
             self.screen.blit(grid[tile][1],loc)
             self.screen.blit(grid[tile][2],loc)
             self.screen.blit(grid[tile][3],loc)
-        pygame.display.update()
