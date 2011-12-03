@@ -47,8 +47,11 @@ class TileGrid(MapData):
             for loc1 in args:
                 self.grid[loc1]["walkable"] = value
 
-    def isWalkable(self,loc):
-        return self.grid[loc]["walkable"]
+    def isWalkable(self,coords):
+        for loc in self.grid:
+            if coords[0] < (self.grid[loc]["coords"][0]+25) and coords[0] >= self.grid[loc]["coords"][0]:   # Check if current coordinates are within this block.
+                if coords[1] < (self.grid[loc]["coords"][1]+25) and coords[1] >= self.grid[loc]["coords"][1]: 
+                    return self.grid[loc]["walkable"]
 
     def loadImage(self,imagename):
         if not os.path.exists(dirs["tiles"] + imagename):
