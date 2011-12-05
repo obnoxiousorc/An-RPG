@@ -52,25 +52,25 @@ class Player():
 
     def move(self,direction):
         if direction == "n":
-            newLoc = (self.currentLoc[0],self.currentLoc[1]-3)
+            newLoc = (self.currentLoc[0],self.currentLoc[1]-5)
             if self.currentLoc[1] > 1: 
                 if self.grid.isWalkable(newLoc):
                     self.currentLoc = newLoc
                     self.setDirection("n")
         elif direction == "s":
-            newLoc = (self.currentLoc[0],self.currentLoc[1]+3)
+            newLoc = (self.currentLoc[0],self.currentLoc[1]+5)
             if self.currentLoc[1] < self.grid.ySize*25: 
                 if self.grid.isWalkable(newLoc):
                     self.setDirection("s")
                     self.currentLoc = newLoc
         elif direction == "w":
-            newLoc = (self.currentLoc[0]-3,self.currentLoc[1])
+            newLoc = (self.currentLoc[0]-5,self.currentLoc[1])
             if self.currentLoc[0] > 1: 
                 if self.grid.isWalkable(newLoc): 
                     self.setDirection("w")
                     self.currentLoc = newLoc
         elif direction == "e":
-            newLoc = (self.currentLoc[0]+3,self.currentLoc[1])
+            newLoc = (self.currentLoc[0]+5,self.currentLoc[1])
             if (self.currentLoc[0] < self.grid.xSize*25): 
                 if self.grid.isWalkable(newLoc): 
                     self.setDirection("e")
@@ -85,6 +85,10 @@ class Player():
             self.direction = 2
         elif direction == "e":
             self.direction = 3
+
+    def getRect(self):
+        rect = pygame.Rect(self.currentLoc[0],self.currentLoc[1],25,25)
+        return rect
 
     def getLoc(self):
         return self.currentLoc

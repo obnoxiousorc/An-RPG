@@ -1,5 +1,5 @@
 import pygame, sys
-from map import TileGrid
+from maps import TileGrid
 from player import Player
 from pygame.locals import *
 screen = pygame.display.set_mode((200,250))
@@ -38,7 +38,13 @@ def game():
                       pressed["right"] = False
                   elif event.key in [K_DOWN, K_j]:
                       pressed["down"] = False
-        
+
+        portalMasks = grid.getPortalMasks()
+        playerMask = pygame.mask.from_surface(player.currentFrameImg)
+        for portal in portalMasks:
+            if (playerMask.overlap(portal,(0,0)) == None):
+                print "Touching a portal."
+
         if pressed["up"]:
             player.move("n")
         if pressed["left"]:
@@ -47,6 +53,7 @@ def game():
             player.move("e")
         if pressed["down"]:
             player.move("s")
+
                   
         grid.update()
         player.draw()
