@@ -51,4 +51,4 @@ def game():
         grid.update()
         player.draw()
         pygame.display.update()
-        clock.tick(10)
+        clock.tick(12)

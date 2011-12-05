@@ -22,10 +22,9 @@ class Player():
 
     def loadSprites(self,fNameBase):
         path = dirs["sprites"]
-        self.sprite[1] = pygame.image.load(path+fNameBase+"1.png")
-        self.sprite[2] = pygame.image.load(path+fNameBase+"2.png")
-        self.sprite[3] = pygame.image.load(path+fNameBase+"3.png")
-        self.sprite[4] = pygame.image.load(path+fNameBase+"4.png")
+        for img in range(16):
+            self.sprite[img+1] = pygame.image.load(path+fNameBase+str(img+1)+".png")
+        
 
     def dealDamage(self,damage,type="HP"):
         if type == "HP":
@@ -48,7 +47,8 @@ class Player():
             self.currentFrame += 1
         else:
             self.currentFrame = 1
-        return self.sprite[self.currentFrame]
+        key = self.currentFrame+(self.direction*4)
+        return self.sprite[key]
 
     def move(self,direction):
         if direction == "n":
@@ -56,21 +56,35 @@ class Player():
             if self.currentLoc[1] > 1: 
                 if self.grid.isWalkable(newLoc):
                     self.currentLoc = newLoc
+                    self.setDirection("n")
         elif direction == "s":
             newLoc = (self.currentLoc[0],self.currentLoc[1]+3)
             if self.currentLoc[1] < self.grid.ySize*25: 
                 if self.grid.isWalkable(newLoc):
+                    self.setDirection("s")
                     self.currentLoc = newLoc
         elif direction == "w":
             newLoc = (self.currentLoc[0]-3,self.currentLoc[1])
             if self.currentLoc[0] > 1: 
                 if self.grid.isWalkable(newLoc): 
+                    self.setDirection("w")
                     self.currentLoc = newLoc
         elif direction == "e":
             newLoc = (self.currentLoc[0]+3,self.currentLoc[1])
             if (self.currentLoc[0] < self.grid.xSize*25): 
                 if self.grid.isWalkable(newLoc): 
+                    self.setDirection("e")
                     self.currentLoc = newLoc
+
+    def setDirection(self,direction):
+        if direction == "s":
+            self.direction = 0
+        elif direction == "n":
+            self.direction = 1
+        elif direction == "w":
+            self.direction = 2
+        elif direction == "e":
+            self.direction = 3
 
     def getLoc(self):
         return self.currentLoc
