@@ -4,7 +4,7 @@ from player import Player
 from pygame.locals import *
 screen = pygame.display.set_mode((200,250))
 grid = TileGrid(screen)
-grid.loadMapData("map1")
+grid.loadMapData("map1v2")
 player = Player((26,26),"player",grid)
 player.draw()
 clock = pygame.time.Clock()
@@ -15,6 +15,7 @@ pressed["right"] = False
 pressed["down"] = False
 
 def game():
+    pygame.event.get() # Clear the event queue.
     while 1: 
         for event in pygame.event.get():
               if event.type == KEYDOWN:
@@ -42,7 +43,7 @@ def game():
         portalMasks = grid.getPortalMasks()
         playerMask = pygame.mask.from_surface(player.currentFrameImg)
         for portal in portalMasks:
-            if (playerMask.overlap(portal,(0,0)) == None):
+            if not (playerMask.overlap_area(portal,(0,0)) > 0):
                 print "Touching a portal."
 
         if pressed["up"]:
@@ -53,7 +54,6 @@ def game():
             player.move("e")
         if pressed["down"]:
             player.move("s")
-
                   
         grid.update()
         player.draw()
